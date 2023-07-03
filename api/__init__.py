@@ -10,6 +10,7 @@ from .models.lga import Lga
 from .region.views import region_namespace
 from .state.views import state_namespace
 from .lga.views import lga_namespace
+from .user.views import user_namespace
 
 
 def create_app(config=Config):
@@ -27,5 +28,6 @@ def create_app(config=Config):
     api.add_namespace(lga_namespace, path='/lgas')
     api.add_namespace(region_namespace, path='/regions')
     api.add_namespace(state_namespace, path='/states')
+    api.add_namespace(user_namespace, path='/users')
 
     return app

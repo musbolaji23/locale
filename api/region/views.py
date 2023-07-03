@@ -1,7 +1,7 @@
 from http import HTTPStatus
-from flask import request
 from flask_restx import Namespace, Resource, fields
 from ..models.region import Region
+from ..utils.apirequired import api_key_required
 
 region_namespace = Namespace('region', description='name space for region')
 
@@ -23,6 +23,7 @@ get_one_region_model = region_namespace.model(
 
 @region_namespace.route('/')
 class GetAllRegion(Resource):
+    @api_key_required
     @region_namespace.marshal_with(region_model)
     def get(self):
         regions = Region.query.all()
@@ -32,9 +33,8 @@ class GetAllRegion(Resource):
 @region_namespace.route('/<string:region_name>')
 class GetOneRegion(Resource):
     @region_namespace.expect(get_one_region_model)
-    #@region_namespace.marshal_with(region_model)
+    @region_namespace.marshal_with(region_model)
     def get(self, region_name):
-        print(region_name)
-        data = {region_name}
-        #regions = Region.query.find()
-        return data, HTTPStatus.OK
+        region = Region.query.filter_by(name=region_name).first()
+        
+        return region, HTTPStatus.OK
